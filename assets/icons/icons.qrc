@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>calculator.svg</file>
+        <file>camera.svg</file>
+        <file>chevron-left.svg</file>
+        <file>chevron-right.svg</file>
+        <file>help.svg</file>
+        <file>menu.svg</file>
+        <file>settings.svg</file>
+        <file>share.svg</file>
+        <file>star.svg</file>
+        <file>take-photo.svg</file>
+        <file>smd.svg</file>
+        <file>op-amp.svg</file>
+    </qresource>
+</RCC>

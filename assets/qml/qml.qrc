@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file>main.qml</file>
+        <file>Components/DrawerItem.qml</file>
+        <file>Components/PageDrawer.qml</file>
+        <file>Components/SvgImage.qml</file>
+        <file>Pages/About.qml</file>
+        <file>Pages/Ads.qml</file>
+        <file>Pages/Camera.qml</file>
+        <file>Pages/ImageToResistance.qml</file>
+        <file>Pages/Settings.qml</file>
+        <file>Pages/ResistanceCalculator.qml</file>
+        <file>Pages/OpAmpCalculator.qml</file>
+        <file>Pages/SmdCalculator.qml</file>
+        <file>Components/Resistance.qml</file>
+        <file>Ads.qml</file>
+        <file>UI.qml</file>
+        <file>Components/ResistanceCalculatorWidgets.qml</file>
+    </qresource>
+</RCC>
