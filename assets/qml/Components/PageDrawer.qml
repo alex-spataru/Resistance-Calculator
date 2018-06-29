@@ -48,6 +48,7 @@ Drawer {
     property color iconBgColorLeft: "#000"
     property color iconBgColorRight: "#000"
     property size iconSize: Qt.size (72, 72)
+    property alias currentItem: listView.currentIndex
 
     //
     // List model that generates the page selector

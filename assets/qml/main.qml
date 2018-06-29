@@ -43,6 +43,23 @@ ApplicationWindow {
     readonly property int bannerHeight: AdsEnabled ? 50 : 0
 
     //
+    // Opens the link to disable ads, which depends on
+    // the operating system in which the application is
+    // currently running.
+    //
+    function removeAds() {
+
+    }
+
+    //
+    // Show a simple dialog with app name, app version,
+    // developers and contact methods
+    //
+    function showAboutDialog() {
+
+    }
+
+    //
     // Window options
     //
     width: 320

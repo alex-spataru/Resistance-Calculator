@@ -24,6 +24,7 @@ import QtQuick 2.0
 import ResistanceInfo 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
 
 import "../Components"
 
@@ -44,6 +45,11 @@ Item {
             id: tabBar
             Layout.fillWidth: true
             currentIndex: ResistanceInfo.resistorType
+
+            Material.elevation: 4
+            Material.background: Material.primary
+            Material.accent: Qt.rgba (1, 1, 1, 1)
+            Material.foreground: Qt.rgba (1, 1, 1, 0.7)
 
             onCurrentIndexChanged: {
                 swipeView.currentIndex = currentIndex

@@ -29,18 +29,26 @@ import "Pages"
 import "Components"
 
 Page {
+    id: ui
+
     //
     // Aliases
     //
+    property bool toolbarShadow: true
     property alias toolbarTitle: toolbarText.text
 
     //
     // Loads the given page and changes the toolbar title
     //
     function loadPage (page, index) {
-        stack.clear()
-        toolbarTitle = drawer.items.get (index).pageTitle
-        stack.push (page)
+        if (drawer.currentItem !== index)
+            drawer.currentItem = index
+
+        else {
+            stack.clear()
+            toolbarTitle = drawer.items.get (index).pageTitle
+            stack.push (page)
+        }
     }
 
     //
@@ -83,21 +91,14 @@ Page {
         }
     }
 
-
-    //
-    // Background rectangle (to dim screen when using camera)
-    //
-    background: Rectangle {
-        onColorChanged: NumberAnimation{}
-        color: imageToResistance.visible ? "#000" : Material.background
-    }
-
     //
     // Toolbar
     //
     header: ToolBar {
         height: 56
-        Material.primary: imageToResistance.visible ? "#000" : app.Material.primary
+        Material.foreground: "#fff"
+        Material.background: Material.primary
+        Material.elevation: parent.toolbarShadow ? 4 : 0
 
         RowLayout {
             spacing: 3/2 * app.spacing
@@ -129,6 +130,40 @@ Page {
             Item {
                 Layout.fillWidth: true
             }
+
+            SvgImage {
+                sourceSize: Qt.size (24, 24)
+                source: "qrc:/icons/more.svg"
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: menu.open()
+                }
+
+                Menu {
+                    id: menu
+                    x: app.width - width
+                    transformOrigin: Menu.TopRight
+
+                    MenuItem {
+                        text: qsTr ("About")
+                        onClicked: app.showAboutDialog()
+                    }
+
+                    MenuItem {
+                        text: qsTr ("Settings")
+                        onClicked: loadPage (settings, 3)
+                    }
+
+                    MenuItem {
+                        visible: enabled
+                        enabled: AdsEnabled
+                        text: qsTr ("Remove Ads")
+                        onClicked: app.removeAds()
+                        height: enabled ? implicitHeight : 0
+                    }
+                }
+            }
         }
     }
 
@@ -153,13 +188,12 @@ Page {
         //
         actions: {
             0: function() {loadPage (resistanceCalculator, 0)},
-            1: function() {loadPage (imageToResistance, 1)},
-            2: function() {loadPage (smdCalculator, 2)},
-            3: function() {loadPage (opAmpCalculator, 3)},
-            4: function() {loadPage (settings, 4)},
-            // 5: ignored (separator)
-            6: function() {learnAboutResistors()},
-            7: function() {rateApplication()}
+            1: function() {loadPage (smdCalculator, 1)},
+            2: function() {loadPage (opAmpCalculator, 2)},
+            3: function() {loadPage (settings, 3)},
+            // 4: ignored (separator)
+            5: function() {learnAboutResistors()},
+            6: function() {rateApplication()}
         }
 
         //
@@ -171,11 +205,6 @@ Page {
             ListElement {
                 pageTitle: qsTr ("Resistance Calculator")
                 pageIcon: "qrc:/icons/calculator.svg"
-            }
-
-            ListElement {
-                pageTitle: qsTr ("Scan Resistor")
-                pageIcon: "qrc:/icons/camera.svg"
             }
 
             ListElement {
@@ -234,16 +263,7 @@ Page {
             visible: false
             anchors.fill: parent
             id: resistanceCalculator
-
-            anchors {
-                fill: parent
-                margins: -app.spacing
-            }
-        }
-
-        ImageToResistance {
-            visible: false
-            id: imageToResistance
+            onVisibleChanged: ui.toolbarShadow = !visible
 
             anchors {
                 fill: parent
@@ -260,6 +280,7 @@ Page {
         OpAmpCalculator {
             visible: false
             id: opAmpCalculator
+            onVisibleChanged: ui.toolbarShadow = !visible
 
             anchors {
                 fill: parent

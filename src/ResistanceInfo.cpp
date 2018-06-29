@@ -61,10 +61,18 @@ ResistanceInfo::ResistanceInfo (QObject *parent) : QObject (parent) {
 
 /**
  * @returns A nicely formatted string with the current
- *          resistance value
+ *          resistance and tolerance values
  */
 QString ResistanceInfo::resistanceStr() const {
-    return getResistanceStr (resistance());
+    QString str = getResistanceStr (resistance());
+
+    if (resistance() != UNKNOWN_RESISTANCE) {
+        str += " ± ";
+        str += QString::number (getToleranceValue (tolerance()) * 100);
+        str += "%";
+    }
+
+    return str;
 }
 
 /**

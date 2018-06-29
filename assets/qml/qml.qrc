@@ -6,8 +6,6 @@
         <file>Components/SvgImage.qml</file>
         <file>Pages/About.qml</file>
         <file>Pages/Ads.qml</file>
-        <file>Pages/Camera.qml</file>
-        <file>Pages/ImageToResistance.qml</file>
         <file>Pages/Settings.qml</file>
         <file>Pages/ResistanceCalculator.qml</file>
         <file>Pages/OpAmpCalculator.qml</file>
