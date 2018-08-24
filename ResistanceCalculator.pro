@@ -49,6 +49,13 @@ QT += quick
 QT += quickcontrols2
 
 #-------------------------------------------------------------------------------
+# Include libraries
+#-------------------------------------------------------------------------------
+
+include ($$PWD/lib/QtAdMob/QtAdMob.pri)
+include ($$PWD/lib/ShareUtils-QML/ShareUtils-QML.pri)
+
+#-------------------------------------------------------------------------------
 # Deploy configuration
 #-------------------------------------------------------------------------------
 
@@ -65,6 +72,7 @@ ios {
 }
 
 android {
+    android:QT += androidextras gui-private
 }
 
 #-------------------------------------------------------------------------------
@@ -95,6 +103,8 @@ DISTFILES += \
     deploy/android/res/values/libs.xml \
     deploy/android/build.gradle \
     deploy/android/gradle/wrapper/gradle-wrapper.properties \
-    deploy/android/gradlew.bat
+    deploy/android/gradlew.bat \
+    deploy/android/res/values/apptheme.xml \
+    deploy/android/res/drawable/splash.xml
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/deploy/android

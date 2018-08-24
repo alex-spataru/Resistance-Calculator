@@ -36,7 +36,7 @@ Drawer {
     //
     implicitHeight: parent.height
     implicitWidth: Math.min (parent.width > parent.height ? 320 : 280,
-                             Math.min (parent.width, parent.height) * 0.90)
+                                                            Math.min (parent.width, parent.height) * 0.90)
 
     //
     // Icon properties
@@ -116,79 +116,85 @@ Drawer {
         //
         // Icon controls
         //
-        Rectangle {
+        Pane {
             z: 2
-            height: 120
             id: iconRect
+            Material.elevation: 1
             Layout.fillWidth: true
+            Layout.maximumHeight: 120
+            Layout.minimumHeight: 120
 
-            Rectangle {
+            contentItem: Item {
                 anchors.fill: parent
 
-                LinearGradient {
+                Rectangle {
                     anchors.fill: parent
-                    start: Qt.point (0, 0)
-                    end: Qt.point (parent.width, 0)
 
-                    gradient: Gradient {
-                        GradientStop { position: 0; color: iconBgColorLeft }
-                        GradientStop { position: 1; color: iconBgColorRight }
+                    LinearGradient {
+                        anchors.fill: parent
+                        start: Qt.point (0, 0)
+                        end: Qt.point (parent.width, 0)
+
+                        gradient: Gradient {
+                            GradientStop { position: 0; color: iconBgColorLeft }
+                            GradientStop { position: 1; color: iconBgColorRight }
+                        }
                     }
                 }
-            }
 
-            RowLayout {
-                spacing: 16
+                RowLayout {
+                    spacing: 16
 
-                anchors {
-                    fill: parent
-                    centerIn: parent
-                    margins: 16
-                }
+                    anchors {
+                        fill: parent
+                        centerIn: parent
+                        margins: 16
+                    }
 
-                SvgImage {
-                    source: iconSource
-                    sourceSize: iconSize
-                }
+                    Image {
+                        source: iconSource
+                        sourceSize: iconSize
+                    }
 
-                ColumnLayout {
-                    spacing: 4
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
+                    ColumnLayout {
+                        spacing: 4
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        Item {
+                            Layout.fillHeight: true
+                        }
+
+                        Label {
+                            color: "#fff"
+                            text: iconTitle
+                            font.weight: Font.Medium
+                            font.pixelSize: 16
+                        }
+
+                        Label {
+                            color: "#fff"
+                            opacity: 0.87
+                            text: iconSubtitle
+                            font.pixelSize: 12
+                        }
+
+                        Label {
+                            color: "#fff"
+                            opacity: 0.67
+                            text: iconSubSubtitle
+                            font.pixelSize: 10
+                        }
+
+                        Item {
+                            Layout.fillHeight: true
+                        }
+                    }
 
                     Item {
+                        Layout.fillWidth: true
                         Layout.fillHeight: true
                     }
-
-                    Label {
-                        color: "#fff"
-                        text: iconTitle
-                        font.weight: Font.Medium
-                        font.pixelSize: 16
-                    }
-
-                    Label {
-                        color: "#fff"
-                        opacity: 0.87
-                        text: iconSubtitle
-                        font.pixelSize: 12
-                    }
-
-                    Label {
-                        color: "#fff"
-                        opacity: 0.67
-                        text: iconSubSubtitle
-                        font.pixelSize: 10
-                    }
-
-                    Item {
-                        Layout.fillHeight: true
-                    }
-                }
-
-                Item {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
                 }
             }
         }

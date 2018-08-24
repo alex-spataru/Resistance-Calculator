@@ -25,23 +25,39 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
+#ifdef Q_OS_ANDROID
+#include <QColor>
+#include <QtAndroid>
+#endif
+
 #include "AppInfo.h"
+#include "QtAdMobBanner.h"
 #include "ResistanceInfo.h"
 
 int main (int argc, char** argv) {
-    // Set application attributes
+    // Set application options
+    QGuiApplication::setApplicationName (APP_NAME);
+    QGuiApplication::setOrganizationName (APP_DEVELOPER);
+    QGuiApplication::setApplicationVersion (APP_VERSION);
+    QGuiApplication::setApplicationDisplayName (APP_NAME);
     QGuiApplication::setAttribute (Qt::AA_EnableHighDpiScaling);
 
-    // Create application
+    // Init. application
     QGuiApplication app (argc, argv);
-    app.setApplicationName (APP_NAME);
-    app.setApplicationVersion (APP_VERSION);
-    app.setOrganizationName (APP_DEVELOPER);
-    app.setApplicationDisplayName (APP_NAME);
 
-    // Configure Ads
+    // Set statusbar color on android
+#ifdef Q_OS_ANDROID
+    QtAndroid::runOnAndroidThread([=]() {
+        QAndroidJniObject window = QtAndroid::androidActivity().callObjectMethod (
+                    "getWindow", "()Landroid/view/Window;");
+        window.callMethod<void>("addFlags", "(I)V", 0x80000000);
+        window.callMethod<void>("clearFlags", "(I)V", 0x04000000);
+        window.callMethod<void>("setStatusBarColor", "(I)V", QColor("#007176").rgba());
+    });
+#endif
 
     // Register QML modules
+    QmlAdMobBanner::DeclareQML();
     ResistanceInfo::DeclareQml();
 
     // Create QML modules

@@ -75,6 +75,33 @@ Page {
     }
 
     //
+    // Opens the URL to report bugs
+    //
+    function reportBug() {
+
+    }
+
+    function openGithubProject() {
+
+    }
+
+    //
+    // Opens the link to disable ads, which depends on
+    // the operating system in which the application is
+    // currently running.
+    //
+    function removeAds() {
+
+    }
+
+    //
+    // Opens the URL to request new features
+    //
+    function featureRequests() {
+
+    }
+
+    //
     // Opens the URL to rate the application
     //
     function rateApplication() {
@@ -146,20 +173,20 @@ Page {
                     transformOrigin: Menu.TopRight
 
                     MenuItem {
-                        text: qsTr ("About")
-                        onClicked: app.showAboutDialog()
+                        onClicked: reportBug()
+                        text: qsTr ("Report bug")
                     }
 
                     MenuItem {
-                        text: qsTr ("Settings")
-                        onClicked: loadPage (settings, 3)
+                        text: qsTr ("GitHub Project")
+                        onClicked: openGithubProject()
                     }
 
                     MenuItem {
                         visible: enabled
                         enabled: AdsEnabled
+                        onClicked: removeAds()
                         text: qsTr ("Remove Ads")
-                        onClicked: app.removeAds()
                         height: enabled ? implicitHeight : 0
                     }
                 }
@@ -189,11 +216,10 @@ Page {
         actions: {
             0: function() {loadPage (resistanceCalculator, 0)},
             1: function() {loadPage (smdCalculator, 1)},
-            2: function() {loadPage (opAmpCalculator, 2)},
-            3: function() {loadPage (settings, 3)},
-            // 4: ignored (separator)
-            5: function() {learnAboutResistors()},
-            6: function() {rateApplication()}
+            // 2: ignored (separator)
+            3: function() {learnAboutResistors()},
+            4: function() {featureRequests()},
+            5: function() {rateApplication()}
         }
 
         //
@@ -213,16 +239,6 @@ Page {
             }
 
             ListElement {
-                pageTitle: qsTr ("Op-Amp Calculator")
-                pageIcon: "qrc:/icons/op-amp.svg"
-            }
-
-            ListElement {
-                pageTitle: qsTr ("Settings")
-                pageIcon: "qrc:/icons/settings.svg"
-            }
-
-            ListElement {
                 separator: true
             }
 
@@ -230,6 +246,12 @@ Page {
                 link: true
                 pageIcon: "qrc:/icons/help.svg"
                 pageTitle: qsTr ("Learn about Resistors")
+            }
+
+            ListElement {
+                link: true
+                pageTitle: qsTr ("Feature Requests")
+                pageIcon: "qrc:/icons/feature-request.svg"
             }
 
             ListElement {
@@ -243,10 +265,8 @@ Page {
     //
     // Page loader
     //
-    StackView {
-        z: 2
-        id: stack
-        initialItem: resistanceCalculator
+    Loader {
+        asynchronous: true
 
         anchors {
             fill: parent
@@ -254,44 +274,34 @@ Page {
             bottomMargin: app.spacing + app.bannerHeight
         }
 
-        popExit: Transition {}
-        popEnter: Transition {}
-        pushExit: Transition {}
-        pushEnter: Transition {}
-
-        ResistanceCalculator {
-            visible: false
+        StackView {
+            z: 2
+            id: stack
             anchors.fill: parent
-            id: resistanceCalculator
-            onVisibleChanged: ui.toolbarShadow = !visible
+            initialItem: resistanceCalculator
 
-            anchors {
-                fill: parent
-                margins: -app.spacing
+            popExit: Transition {}
+            popEnter: Transition {}
+            pushExit: Transition {}
+            pushEnter: Transition {}
+
+            ResistanceCalculator {
+                visible: false
+                anchors.fill: parent
+                id: resistanceCalculator
+                onVisibleChanged: ui.toolbarShadow = !visible
+
+                anchors {
+                    fill: parent
+                    margins: -app.spacing
+                }
             }
-        }
 
-        SmdCalculator {
-            visible: false
-            id: smdCalculator
-            anchors.fill: parent
-        }
-
-        OpAmpCalculator {
-            visible: false
-            id: opAmpCalculator
-            onVisibleChanged: ui.toolbarShadow = !visible
-
-            anchors {
-                fill: parent
-                margins: -app.spacing
+            SmdCalculator {
+                visible: false
+                id: smdCalculator
+                anchors.fill: parent
             }
-        }
-
-        Settings {
-            id: settings
-            visible: false
-            anchors.fill: parent
         }
     }
 }
