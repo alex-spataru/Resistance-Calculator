@@ -20,8 +20,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef _APP_INFO_H
-#define _APP_INFO_H
+#ifndef APP_INFO_H
+#define APP_INFO_H
 
 //
 // Application Information
@@ -33,9 +33,12 @@ static const char* APP_NAME = "Resistance Calculator";
 //
 // Ad Information
 //
-#if defined (ENABLE_ADS)
+#if defined (ENABLE_ADS) && defined (MOBILE_RELEASE)
 static const bool ADS_ENABLED = true;
-static const char* ADS_BANNER_ID = "";
+static const char* ADS_BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
+#elif defined (ENABLE_ADS)
+static const bool ADS_ENABLED = true;
+static const char* ADS_BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
 #else
 static const bool ADS_ENABLED = false;
 static const char* ADS_BANNER_ID = "";

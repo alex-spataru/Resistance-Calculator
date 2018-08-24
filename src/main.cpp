@@ -21,6 +21,7 @@
  */
 
 #include <QtQml>
+#include <QScreen>
 #include <QQuickStyle>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -62,6 +63,7 @@ int main (int argc, char** argv) {
 
     // Create QML modules
     ResistanceInfo info;
+    qreal dpr = app.primaryScreen()->devicePixelRatio();
 
     // Configure QtQuick style
     QQuickStyle::setStyle ("Material");
@@ -74,6 +76,7 @@ int main (int argc, char** argv) {
     engine.rootContext()->setContextProperty ("AdBannerId", ADS_BANNER_ID);
     engine.rootContext()->setContextProperty ("AdsEnabled", ADS_ENABLED);
     engine.rootContext()->setContextProperty ("ResistanceInfo", &info);
+    engine.rootContext()->setContextProperty ("DevicePixelRatio", dpr);
     engine.load (QUrl (QStringLiteral ("qrc:/qml/main.qml")));
 
     // Exit if QML loading fails

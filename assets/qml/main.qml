@@ -24,9 +24,6 @@ import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 
-import "Pages"
-import "Components"
-
 ApplicationWindow {
     id: app
 
@@ -80,7 +77,20 @@ ApplicationWindow {
 
         anchors {
             fill: parent
-            bottomMargin: bannerHeight
+            bottomMargin: ads.height
+        }
+    }
+
+    //
+    // Ads manager
+    //
+    Ads {
+        id: ads
+
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
         }
     }
 }

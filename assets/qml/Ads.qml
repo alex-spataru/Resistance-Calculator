@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Alex Spataru <https://github.com/alex-spataru>
+ * Copyright (c) 2017 Alex Spataru <alex_spataru@outlook.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,63 @@
  */
 
 import QtQuick 2.0
+import QtQuick.Window 2.0
+import com.dreamdev.QtAdMobBanner 1.0
 
 Item {
+    id: ads
+    height: 0
 
+    Behavior on height { NumberAnimation {} }
+
+    //
+    // Locates the banner on the bottom of the screen
+    //
+    function locateBanner() {
+        var w = bannerAd.width / DevicePixelRatio
+        var h = bannerAd.height / DevicePixelRatio
+
+        if (AdsEnabled) {
+            ads.height = app.bannerHeight
+            var sbHeight = Screen.height - Screen.desktopAvailableHeight
+            bannerAd.x = (app.width - w) * DevicePixelRatio / 2
+            bannerAd.y = (app.height - h - app.spacing + sbHeight + 1) * DevicePixelRatio
+        }
+
+        else {
+            ads.height = 0
+            bannerAd.x = app.width * 2 * DevicePixelRatio
+            bannerAd.y = app.height * 2 * DevicePixelRatio
+        }
+    }
+
+    //
+    // Update banner location when window size changes
+    //
+    Connections {
+        target: app
+        onWidthChanged: locateBanner()
+        onHeightChanged: locateBanner()
+    }
+
+    //
+    // Show ads
+    //
+    Component.onCompleted: {
+        locateBanner()
+        bannerAd.visible = AdsEnabled
+    }
+
+    //
+    // Banner ad
+    //
+    AdMobBanner {
+        id: bannerAd
+        onLoaded: locateBanner()
+        Component.onCompleted: {
+            visible = true
+            unitId = BannerId
+            size = AdMobBanner.Banner
+        }
+    }
 }

@@ -48,6 +48,8 @@ QT += core
 QT += quick
 QT += quickcontrols2
 
+DEFINES += QTADMOB_QML
+
 #-------------------------------------------------------------------------------
 # Include libraries
 #-------------------------------------------------------------------------------
@@ -72,6 +74,7 @@ ios {
 }
 
 android {
+    DEFINES += ENABLE_ADS
     android:QT += androidextras gui-private
 }
 
@@ -96,7 +99,7 @@ SOURCES += \
     $$PWD/src/main.cpp \
     $$PWD/src/ResistanceInfo.cpp
 
-DISTFILES += \
+OTHER_FILES += \
     deploy/android/AndroidManifest.xml \
     deploy/android/gradle/wrapper/gradle-wrapper.jar \
     deploy/android/gradlew \
@@ -105,6 +108,19 @@ DISTFILES += \
     deploy/android/gradle/wrapper/gradle-wrapper.properties \
     deploy/android/gradlew.bat \
     deploy/android/res/values/apptheme.xml \
-    deploy/android/res/drawable/splash.xml
+    deploy/android/res/drawable/splash.xml \
+    assets/qml/Components/DrawerItem.qml \
+    assets/qml/Components/PageDrawer.qml \
+    assets/qml/Components/Resistance.qml \
+    assets/qml/Components/ResistanceCalculatorWidgets.qml \
+    assets/qml/Components/SvgImage.qml \
+    assets/qml/Pages/About.qml \
+    assets/qml/Pages/OpAmpCalculator.qml \
+    assets/qml/Pages/ResistanceCalculator.qml \
+    assets/qml/Pages/Settings.qml \
+    assets/qml/Pages/SmdCalculator.qml \
+    assets/qml/Ads.qml \
+    assets/qml/main.qml \
+    assets/qml/UI.qml
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/deploy/android
