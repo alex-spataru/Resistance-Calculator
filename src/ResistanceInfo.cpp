@@ -23,11 +23,30 @@
 #include "ResistanceInfo.h"
 
 /**
- * Used when the user inputs an invalid SMD code. 
+ * Used when the user inputs an invalid SMD code.
  * This helps us to return "Unknown" resistance to the user instead
  * of showing 'Nan' or another cryptic message to the user
- */ 
-static const int UNKNOWN_RESISTANCE = -1;
+ */
+static const int UNKNOWN_RESISTANCE = -1.0;
+
+/**
+ * List if SMD codes with the posicions corresponding
+ * to their respective digits
+ */
+static const int SMD_EIA96_VALUES [97] = {
+    0,
+    100, 102, 105, 107, 110, 113, 115, 118, 121,
+    124, 127, 130, 133, 137, 140, 143, 147, 150,
+    154, 158, 162, 165, 169, 174, 178, 182, 187,
+    191, 196, 200, 205, 210, 215, 221, 226, 232,
+    237, 243, 249, 255, 261, 267, 274, 280, 287,
+    294, 301, 309, 316, 324, 332, 340, 348, 357,
+    365, 374, 383, 392, 402, 412, 422, 432, 442,
+    453, 464, 475, 487, 499, 511, 523, 536, 549,
+    562, 576, 590, 604, 619, 634, 649, 665, 681,
+    698, 715, 732, 750, 768, 787, 806, 825, 845,
+    866, 887, 909, 931, 953, 976
+};
 
 ResistanceInfo::ResistanceInfo (QObject *parent) : QObject (parent) {
     // Set default values
@@ -66,7 +85,7 @@ ResistanceInfo::ResistanceInfo (QObject *parent) : QObject (parent) {
 QString ResistanceInfo::resistanceStr() const {
     QString str = getResistanceStr (resistance());
 
-    if (resistance() != UNKNOWN_RESISTANCE) {
+    if (resistance() > 0) {
         str += " ± ";
         str += QString::number (getToleranceValue (tolerance()) * 100);
         str += "%";
@@ -98,7 +117,7 @@ QString ResistanceInfo::maxResistanceStr() const {
 QString ResistanceInfo::smdResistanceStr() const {
     QString smd = getResistanceStr (smdResistance());
 
-    if (smdResistance() != UNKNOWN_RESISTANCE) {
+    if (smdResistance() > 0) {
         smd += " ± ";
         smd += QString::number (smdTolerance());
         smd += "%";
@@ -686,67 +705,181 @@ void ResistanceInfo::calculateResistance() {
  * that is currently set by the user.
  */
 void ResistanceInfo::calculateSmdResistance() {
-    // Get length of the SMD code
-    int len = smdResistanceCode().length();
-
-    // Check 3-byte code
-    if (len == 3) {
-        // Convert each SMD digit to number
-        bool okA, okB, okC;
-        int digitA = QString (smdResistanceCode().at (0)).toInt (&okA);
-        int digitB = QString (smdResistanceCode().at (1)).toInt (&okB);
-        int digitC = QString (smdResistanceCode().at (2)).toInt (&okC);
-
-        // Ensure that the first two digits are numbers
-        if (!okA || !okB) {
-            setSmdTolerance (0);
-            setSmdResistance (UNKNOWN_RESISTANCE);
-        }
-
-        // Third digit is a character, use EIA-96 standard
-        else if (!okC) {
-
-        }
-
-        // All digits are numbers, calculate resistance normally
-        else {
-            double multiplier = pow (10, digitC);
-            double base = (10 * digitA) + digitB;
-
-            setSmdTolerance (5);
-            setSmdResistance (base * multiplier);
-        }
+    // Handle 0-ohm resistors
+    if (smdResistanceCode() == "0" ||
+            smdResistanceCode() == "00" ||
+            smdResistanceCode() == "000" ||
+            smdResistanceCode() == "0000") {
+        setSmdTolerance (0);
+        setSmdResistance (0);
+        return;
     }
 
-    // Check 4-byte code
-    else if (len == 4) {
-        // Convert each SMD digit to number
-        bool okA, okB, okC, okD;
-        int digitA = QString (smdResistanceCode().at (0)).toInt (&okA);
-        int digitB = QString (smdResistanceCode().at (1)).toInt (&okB);
-        int digitC = QString (smdResistanceCode().at (2)).toInt (&okC);
-        int digitD = QString (smdResistanceCode().at (3)).toInt (&okD);
-
-        // One or more of the digits is not a number
-        if (!okA || !okB || !okC || !okD) {
-            setSmdTolerance (0);
-            setSmdResistance (UNKNOWN_RESISTANCE);
-        }
-
-        // Calculate SMD resistance
-        else {
-            double multiplier = pow (10, digitD);
-            double base = (100 * digitA) + (10 * digitB) + digitC;
-
-            setSmdTolerance (1);
-            setSmdResistance (base * multiplier);
-        }
-    }
-
-    // Length of code is invalid
-    else {
-        setSmdTolerance (5);
+    // Verify that the SMD code has between 3 and 4 digits
+    int codeLen = smdResistanceCode().length();
+    if (codeLen < 3 || codeLen > 4) {
+        setSmdTolerance (0);
         setSmdResistance (UNKNOWN_RESISTANCE);
+        return;
+    }
+
+    // Read digits
+    QList<QPair<bool,int>> numbers;
+    for (int i = 0; i < codeLen; ++i) {
+        bool ok;
+        int num = QString (smdResistanceCode().at (i)).toInt (&ok);
+        numbers.append (qMakePair<bool,int> (ok, num));
+    }
+
+    // Check 3 digit SMD code
+    if (codeLen == 3) {
+        // Get digit types
+        bool nanA = !numbers.at (0).first;
+        bool nanB = !numbers.at (1).first;
+        bool nanC = !numbers.at (2).first;
+
+        // Get numbers
+        int numA = numbers.at (0).second;
+        int numB = numbers.at (1).second;
+        int numC = numbers.at (2).second;
+
+        // All digits are numbers (standard SMD)
+        if (!nanA && !nanB && !nanC) {
+            setSmdTolerance (5);
+            setSmdResistance (((numA * 10) + numB) * pow (10, numC));
+        }
+
+        // Radix point is present (digit, char, digit)
+        else if (!nanA && nanB && !nanC) {
+            if (smdResistanceCode().at (1).toUpper() == 'R') {
+                setSmdTolerance (5);
+                setSmdResistance (numA + (static_cast<double>(numC) / 10));
+            } else {
+                setSmdTolerance (0);
+                setSmdResistance (UNKNOWN_RESISTANCE);
+            }
+        }
+
+        // Use EIA-96 standard (digit, digit, char)
+        else if (!nanA && !nanB && nanC) {
+            // Get two-digit code and calculate base value
+            int value = 0;
+            int digit = (numA * 10) + numB;
+            int maxEIA96Code = (sizeof (SMD_EIA96_VALUES) / sizeof (int)) - 1;
+            if (digit < maxEIA96Code)
+                value = SMD_EIA96_VALUES [digit];
+            else {
+                setSmdTolerance (0);
+                setSmdResistance (UNKNOWN_RESISTANCE);
+                return;
+            }
+
+            // Get multiplier value
+            double multiplier = -1;
+            QChar c = smdResistanceCode().at (2);
+            switch (c.toUpper().toLatin1()) {
+            case 'Z':
+                multiplier = 0.001;
+                break;
+            case 'Y':
+            case 'R':
+                multiplier = 0.01;
+                break;
+            case 'X':
+            case 'S':
+                multiplier = 0.1;
+                break;
+            case 'A':
+                multiplier = 1;
+                break;
+            case 'B':
+            case 'H':
+                multiplier = 10;
+                break;
+            case 'C':
+                multiplier = 100;
+                break;
+            case 'D':
+                multiplier = 1000;
+                break;
+            case 'E':
+                multiplier = 10000;
+                break;
+            case 'F':
+                multiplier = 100000;
+                break;
+            default:
+                setSmdTolerance (0);
+                setSmdResistance (UNKNOWN_RESISTANCE);
+                break;
+            }
+
+            // Calculate resistance
+            if (multiplier > 0.0) {
+                setSmdTolerance (1);
+                setSmdResistance (value * multiplier);
+            }
+        }
+
+        // Error
+        else {
+            setSmdTolerance (0);
+            setSmdResistance (UNKNOWN_RESISTANCE);
+        }
+    }
+
+    // Check 4 digit SMD code
+    if (codeLen == 4) {
+        // Get digit types
+        bool nanA = !numbers.at (0).first;
+        bool nanB = !numbers.at (1).first;
+        bool nanC = !numbers.at (2).first;
+        bool nanD = !numbers.at (3).first;
+
+        // Get numbers
+        int numA = numbers.at (0).second;
+        int numB = numbers.at (1).second;
+        int numC = numbers.at (2).second;
+        int numD = numbers.at (3).second;
+
+        // All digits are numbers (standard SMD)
+        if (!nanA && !nanB && !nanC && !nanD) {
+            setSmdTolerance (1);
+            setSmdResistance (((numA * 100) + (numB * 10) + numC) * pow (10, numD));
+        }
+
+        // Radix point is on second digit (digit, char, digit, digit)
+        else if (!nanA && nanB && !nanC && !nanD) {
+            if (smdResistanceCode().at (1).toUpper() == 'R') {
+                double n = numA
+                        + (static_cast<double>(numC) / 10)
+                        + (static_cast<double>(numD) / 100);
+
+                setSmdTolerance (1);
+                setSmdResistance (n);
+            } else {
+                setSmdTolerance (0);
+                setSmdResistance (UNKNOWN_RESISTANCE);
+            }
+        }
+
+        // Radix point is on third digit (digit, digit, char, digit)
+        else if (!nanA && !nanB && nanC && !nanD) {
+            if (smdResistanceCode().at (2).toUpper() == 'R') {
+                double n = (numA * 10) + numB + (static_cast<double>(numD) / 10);
+                setSmdTolerance (1);
+                setSmdResistance (n);
+            } else {
+                setSmdTolerance (0);
+                setSmdResistance (UNKNOWN_RESISTANCE);
+            }
+        }
+
+        // Error
+        else {
+            setSmdTolerance (0);
+            setSmdResistance (UNKNOWN_RESISTANCE);
+        }
     }
 }
 
@@ -803,7 +936,7 @@ void ResistanceInfo::setSmdTolerance(const int tolerance) {
 /**
  * Changes the @a resistance and updates the minimum and maximum resistance
  * values of the class.
- */ 
+ */
 void ResistanceInfo::setResistance (const double resistance) {
     Q_ASSERT_X (resistance >= UNKNOWN_RESISTANCE,
                 __func__,
@@ -818,7 +951,7 @@ void ResistanceInfo::setResistance (const double resistance) {
 
 /**
  * Changes the SMD @a resistance of the class.
- */ 
+ */
 void ResistanceInfo::setSmdResistance (const double resistance) {
     Q_ASSERT_X (resistance >= UNKNOWN_RESISTANCE,
                 __func__,
@@ -829,9 +962,9 @@ void ResistanceInfo::setSmdResistance (const double resistance) {
 }
 
 /**
- * Returns the most adequate scientific exponent for the given 
+ * Returns the most adequate scientific exponent for the given
  * @a resistance value.
- */ 
+ */
 int ResistanceInfo::scientificExp (const double resistance) const {
     int x = 9;
     int exp = -1;
@@ -848,7 +981,7 @@ int ResistanceInfo::scientificExp (const double resistance) const {
 
 /**
  * Returns a nicely formatted string with the givn @a resistance value
- */ 
+ */
 QString ResistanceInfo::getResistanceStr (const double resistance) const {
     Q_ASSERT_X (resistance >= UNKNOWN_RESISTANCE,
                 __func__,
@@ -857,6 +990,10 @@ QString ResistanceInfo::getResistanceStr (const double resistance) const {
     // Resistance is unknown
     if (resistance == UNKNOWN_RESISTANCE)
         return tr ("Unknown");
+
+    // Resistance is 0 ohms
+    if (resistance == 0.0)
+        return tr ("%1 (jumper)").arg ("0 Ω");
 
     // Get scientific exponent for the resitance
     int power = scientificExp (resistance);

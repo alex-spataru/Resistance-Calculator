@@ -201,12 +201,12 @@ Page {
         z: 1
         id: drawer
         iconTitle: AppName
+        height: ui.height
         iconBgColorLeft: Material.primary
         iconBgColorRight: Material.primary
         iconSource: "qrc:/images/logo.svg"
         iconSubtitle: qsTr ("Version %1").arg (AppVersion)
         iconSubSubtitle: qsTr ("Developed by %1").arg (AppDeveloper)
-        height: AdsEnabled ? app.height - app.bannerHeight - 1 : app.height
 
         //
         // Define the actions to take for each drawer item
@@ -265,43 +265,37 @@ Page {
     //
     // Page loader
     //
-    Loader {
-        asynchronous: true
+    StackView {
+        z: 2
+        id: stack
+        initialItem: resistanceCalculator
 
         anchors {
             fill: parent
             margins: app.spacing
-            bottomMargin: app.spacing + app.bannerHeight
         }
 
-        StackView {
-            z: 2
-            id: stack
+        popExit: Transition {}
+        popEnter: Transition {}
+        pushExit: Transition {}
+        pushEnter: Transition {}
+
+        ResistanceCalculator {
+            visible: false
             anchors.fill: parent
-            initialItem: resistanceCalculator
+            id: resistanceCalculator
+            onVisibleChanged: ui.toolbarShadow = !visible
 
-            popExit: Transition {}
-            popEnter: Transition {}
-            pushExit: Transition {}
-            pushEnter: Transition {}
-
-            ResistanceCalculator {
-                visible: false
-                anchors.fill: parent
-                id: resistanceCalculator
-                onVisibleChanged: ui.toolbarShadow = !visible
-
-                anchors {
-                    fill: parent
-                    margins: -app.spacing
-                }
+            anchors {
+                fill: parent
+                margins: -app.spacing
             }
+        }
 
-            SmdCalculator {
-                visible: false
-                id: smdCalculator
-                anchors.fill: parent
-            }
+        SmdCalculator {
+            visible: false
+            id: smdCalculator
+            anchors.fill: parent
         }
     }
 }

@@ -35,7 +35,7 @@ static const char* APP_NAME = "Resistance Calculator";
 //
 #if defined (ENABLE_ADS) && defined (MOBILE_RELEASE)
 static const bool ADS_ENABLED = true;
-static const char* ADS_BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
+static const char* ADS_BANNER_ID = "ca-app-pub-5828460259173662/1011183555";
 #elif defined (ENABLE_ADS)
 static const bool ADS_ENABLED = true;
 static const char* ADS_BANNER_ID = "ca-app-pub-3940256099942544/6300978111";

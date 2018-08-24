@@ -22,32 +22,34 @@
 
 import QtQuick 2.0
 import QtQuick.Window 2.0
+import QtQuick.Controls.Material 2.0
 import com.dreamdev.QtAdMobBanner 1.0
 
 Item {
     id: ads
-    height: 0
 
-    Behavior on height { NumberAnimation {} }
+    //
+    // Holds the height of the banner ad
+    //
+    property int adHeight: 0
 
     //
     // Locates the banner on the bottom of the screen
     //
     function locateBanner() {
-        var w = bannerAd.width / DevicePixelRatio
-        var h = bannerAd.height / DevicePixelRatio
-
         if (AdsEnabled) {
-            ads.height = app.bannerHeight
-            var sbHeight = Screen.height - Screen.desktopAvailableHeight
-            bannerAd.x = (app.width - w) * DevicePixelRatio / 2
-            bannerAd.y = (app.height - h - app.spacing + sbHeight + 1) * DevicePixelRatio
+            var w = bannerAd.width / DevicePixelRatio
+            var h = bannerAd.height / DevicePixelRatio
+
+            adHeight = h
+            bannerAd.x = (Screen.width - w) * DevicePixelRatio / 2
+            bannerAd.y = (Screen.height - h) * DevicePixelRatio
         }
 
         else {
-            ads.height = 0
-            bannerAd.x = app.width * 2 * DevicePixelRatio
-            bannerAd.y = app.height * 2 * DevicePixelRatio
+            adHeight = 0
+            bannerAd.x = Screen.width * 2 * DevicePixelRatio
+            bannerAd.y = Screen.height * 2 * DevicePixelRatio
         }
     }
 
@@ -61,23 +63,18 @@ Item {
     }
 
     //
-    // Show ads
-    //
-    Component.onCompleted: {
-        locateBanner()
-        bannerAd.visible = AdsEnabled
-    }
-
-    //
     // Banner ad
     //
     AdMobBanner {
         id: bannerAd
         onLoaded: locateBanner()
+        visible: ads.enabled && AdsEnabled
+
         Component.onCompleted: {
-            visible = true
-            unitId = BannerId
-            size = AdMobBanner.Banner
+            if (AdsEnabled) {
+                unitId = AdBannerId
+                size = AdMobBanner.Banner
+            }
         }
     }
 }

@@ -75,7 +75,22 @@ ios {
 
 android {
     DEFINES += ENABLE_ADS
+    #DEFINES += MOBILE_RELEASE
     android:QT += androidextras gui-private
+
+    DISTFILES += \
+        $$PWD/deploy/android/AndroidManifest.xml \
+        $$PWD/deploy/android/gradle/wrapper/gradle-wrapper.jar \
+        $$PWD/deploy/android/gradlew \
+        $$PWD/deploy/android/res/values/libs.xml \
+        $$PWD/deploy/android/build.gradle \
+        $$PWD/deploy/android/gradle/wrapper/gradle-wrapper.properties \
+        $$PWD/deploy/android/gradlew.bat \
+        $$PWD/deploy/android/res/values/apptheme.xml \
+        $$PWD/deploy/android/res/drawable/splash.xml \
+        $$PWD/deploy/android/src/org/dreamdev/QtAdMob/QtAdMobActivity.java
+
+    ANDROID_PACKAGE_SOURCE_DIR = $$PWD/deploy/android
 }
 
 #-------------------------------------------------------------------------------
@@ -100,27 +115,17 @@ SOURCES += \
     $$PWD/src/ResistanceInfo.cpp
 
 OTHER_FILES += \
-    deploy/android/AndroidManifest.xml \
-    deploy/android/gradle/wrapper/gradle-wrapper.jar \
-    deploy/android/gradlew \
-    deploy/android/res/values/libs.xml \
-    deploy/android/build.gradle \
-    deploy/android/gradle/wrapper/gradle-wrapper.properties \
-    deploy/android/gradlew.bat \
-    deploy/android/res/values/apptheme.xml \
-    deploy/android/res/drawable/splash.xml \
-    assets/qml/Components/DrawerItem.qml \
-    assets/qml/Components/PageDrawer.qml \
-    assets/qml/Components/Resistance.qml \
-    assets/qml/Components/ResistanceCalculatorWidgets.qml \
-    assets/qml/Components/SvgImage.qml \
-    assets/qml/Pages/About.qml \
-    assets/qml/Pages/OpAmpCalculator.qml \
-    assets/qml/Pages/ResistanceCalculator.qml \
-    assets/qml/Pages/Settings.qml \
-    assets/qml/Pages/SmdCalculator.qml \
-    assets/qml/Ads.qml \
-    assets/qml/main.qml \
-    assets/qml/UI.qml
+    $$PWD/assets/qml/Components/DrawerItem.qml \
+    $$PWD/assets/qml/Components/PageDrawer.qml \
+    $$PWD/assets/qml/Components/Resistance.qml \
+    $$PWD/assets/qml/Components/ResistanceCalculatorWidgets.qml \
+    $$PWD/assets/qml/Components/SvgImage.qml \
+    $$PWD/assets/qml/Pages/About.qml \
+    $$PWD/assets/qml/Pages/OpAmpCalculator.qml \
+    $$PWD/assets/qml/Pages/ResistanceCalculator.qml \
+    $$PWD/assets/qml/Pages/Settings.qml \
+    $$PWD/assets/qml/Pages/SmdCalculator.qml \
+    $$PWD/assets/qml/Ads.qml \
+    $$PWD/assets/qml/main.qml \
+    $$PWD/assets/qml/UI.qml
 
-ANDROID_PACKAGE_SOURCE_DIR = $$PWD/deploy/android

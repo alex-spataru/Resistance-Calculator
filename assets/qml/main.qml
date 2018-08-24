@@ -21,6 +21,7 @@
  */
 
 import QtQuick 2.0
+import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 
@@ -37,7 +38,12 @@ ApplicationWindow {
     readonly property int normalLabel: 16
     readonly property int extraSmallLabel: 10
     readonly property int extraLargeLabel: 24
-    readonly property int bannerHeight: AdsEnabled ? 50 : 0
+
+    //
+    // UI loading variables
+    //
+    property var ui: undefined
+    property bool uiLoaded: false
 
     //
     // Window options
@@ -60,7 +66,10 @@ ApplicationWindow {
     // Decrease stack depth before closing the application.
     // This allows the Android user to use the back button to navigate the UI
     //
-    onClosing: close.accepted = ui.checkStackDepth()
+    onClosing: {
+        if (ui !== undefined)
+            close.accepted = ui.checkStackDepth()
+    }
 
     //
     // Material style options
@@ -70,27 +79,60 @@ ApplicationWindow {
     Material.theme: Material.Light
 
     //
-    // Main UI of the application
+    // background color
     //
-    UI {
-        id: ui
-
-        anchors {
-            fill: parent
-            bottomMargin: ads.height
-        }
+    background: Rectangle {
+        color: Material.primary
     }
 
     //
-    // Ads manager
+    // White background color (only shown when UI is loaded)
     //
-    Ads {
-        id: ads
+    Rectangle {
+        anchors.fill: parent
+        opacity: uiLoaded ? 1 : 0
+        color: Material.background
+        Behavior on opacity { NumberAnimation {} }
+    }
 
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
+    //
+    // Main UI of the application
+    //
+    ColumnLayout {
+        spacing: 0
+        anchors.fill: parent
+
+        opacity: uiLoaded ? 1 : 0
+        Behavior on opacity { NumberAnimation {} }
+
+        //
+        // UI loader
+        //
+        Loader {
+            id: uiLoader
+            asynchronous: true
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            onLoaded: app.uiLoaded = true
+
+            sourceComponent: UI {
+                anchors.fill: parent
+                Component.onCompleted: app.ui = this
+            }
+        }
+
+        //
+        // Ad manager
+        //
+        Ads {
+            id: adsManager
+            enabled: uiLoaded
+            Layout.fillWidth: true
+            Layout.minimumHeight: uiLoaded ? adHeight : 0
+            Layout.maximumHeight: uiLoaded ? adHeight : 0
+
+            Behavior on Layout.maximumHeight { NumberAnimation {} }
+            Behavior on Layout.minimumHeight { NumberAnimation {} }
         }
     }
 }

@@ -20,8 +20,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef _RESISTANCE_INFO_H
-#define _RESISTANCE_INFO_H
+#ifndef RESISTANCE_INFO_H
+#define RESISTANCE_INFO_H
 
 #include <math.h>
 
