@@ -48,7 +48,8 @@ static const int SMD_EIA96_VALUES [97] = {
     845, 866, 887, 909, 931, 953, 976
 };
 
-ResistanceInfo::ResistanceInfo (QObject *parent) : QObject (parent) {
+ResistanceInfo::ResistanceInfo (QObject *parent) : QObject (parent)
+{
     // Set default values
     setTempco (TempcoBrown);
     setDigit (0, DigitOrange);
