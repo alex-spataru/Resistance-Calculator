@@ -96,13 +96,7 @@ ApplicationWindow {
             asynchronous: true
             Layout.fillWidth: true
             Layout.fillHeight: true
-            onLoaded: uiTimer.start()
-
-            Timer {
-                id: uiTimer
-                interval: 100
-                onTriggered: app.uiLoaded = true
-            }
+            onLoaded: app.uiLoaded = true
 
             sourceComponent: UI {
                 anchors.fill: parent

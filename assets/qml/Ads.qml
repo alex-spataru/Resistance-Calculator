@@ -73,7 +73,7 @@ Item {
         Component.onCompleted: {
             if (AdsEnabled) {
                 unitId = AdBannerId
-                size = AdMobBanner.Banner
+                size = AdMobBanner.SmartBanner
             }
         }
     }

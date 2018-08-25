@@ -200,8 +200,8 @@ Page {
     PageDrawer {
         z: 1
         id: drawer
-        iconTitle: AppName
         height: ui.height
+        iconTitle: AppName
         iconBgColorLeft: Material.primary
         iconBgColorRight: Material.primary
         iconSource: "qrc:/images/logo.svg"
