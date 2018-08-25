@@ -87,7 +87,7 @@ Item {
                 displayText: qsTr ("1st Digit")
                 model: ResistanceInfo.firstDigitNames
                 currentIndex: ResistanceInfo.digitA - 1
-                popup.height: Math.min (18 * count, app.height * 0.5)
+                popup.height: Math.min (height * count, app.height / 4)
 
                 onCurrentIndexChanged: {
                     if (ResistanceInfo.digitA !== currentIndex + 1)
@@ -103,7 +103,7 @@ Item {
                 displayText: qsTr ("2nd Digit")
                 model: ResistanceInfo.digitNames
                 currentIndex: ResistanceInfo.digitB
-                popup.height: Math.min (18 * count, app.height * 0.5)
+                popup.height: Math.min (height * count, app.height / 4)
 
                 onCurrentIndexChanged: {
                     if (ResistanceInfo.digitB !== currentIndex)
@@ -120,7 +120,7 @@ Item {
                 displayText: qsTr ("3rd Digit")
                 model: ResistanceInfo.digitNames
                 currentIndex: ResistanceInfo.digitC
-                popup.height: Math.min (18 * count, app.height * 0.5)
+                popup.height: Math.min (height * count, app.height / 4)
 
                 onCurrentIndexChanged: {
                     if (ResistanceInfo.digitC !== currentIndex)
@@ -136,7 +136,7 @@ Item {
                 displayText: qsTr ("Multiplier")
                 model: ResistanceInfo.multiplierNames
                 currentIndex: ResistanceInfo.multiplier
-                popup.height: Math.min (18 * count, app.height * 0.5)
+                popup.height: Math.min (height * count, app.height / 4)
 
                 onCurrentIndexChanged: {
                     if (ResistanceInfo.multiplier !== currentIndex)
@@ -152,7 +152,7 @@ Item {
                 displayText: qsTr ("Tolerance")
                 model: ResistanceInfo.toleranceNames
                 currentIndex: ResistanceInfo.tolerance
-                popup.height: Math.min (18 * count, app.height * 0.5)
+                popup.height: Math.min (height * count, app.height / 4)
 
                 onCurrentIndexChanged: {
                     if (ResistanceInfo.tolerance !== currentIndex)
@@ -169,7 +169,7 @@ Item {
                 displayText: qsTr ("Tempco")
                 model: ResistanceInfo.tempcoNames
                 currentIndex: ResistanceInfo.tempco
-                popup.height: Math.min (18 * count, app.height * 0.5)
+                popup.height: Math.min (height * count, app.height / 4)
 
                 onCurrentIndexChanged: {
                     if (ResistanceInfo.tempco !== currentIndex)
