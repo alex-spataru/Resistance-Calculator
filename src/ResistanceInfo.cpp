@@ -27,25 +27,25 @@
  * This helps us to return "Unknown" resistance to the user instead
  * of showing 'Nan' or another cryptic message to the user
  */
-static const int UNKNOWN_RESISTANCE = -1.0;
+static const double UNKNOWN_RESISTANCE = -1.0;
 
 /**
- * List if SMD codes with the posicions corresponding
- * to their respective digits
+ * Ordered list of EIA-96 base values.
+ * First item is 0 to avoid using an offset to correctly
+ * match the EIA-96 code (index num) to the corresponding
+ * base resistance value.
  */
 static const int SMD_EIA96_VALUES [97] = {
-    0,
-    100, 102, 105, 107, 110, 113, 115, 118, 121,
-    124, 127, 130, 133, 137, 140, 143, 147, 150,
-    154, 158, 162, 165, 169, 174, 178, 182, 187,
-    191, 196, 200, 205, 210, 215, 221, 226, 232,
-    237, 243, 249, 255, 261, 267, 274, 280, 287,
-    294, 301, 309, 316, 324, 332, 340, 348, 357,
-    365, 374, 383, 392, 402, 412, 422, 432, 442,
-    453, 464, 475, 487, 499, 511, 523, 536, 549,
-    562, 576, 590, 604, 619, 634, 649, 665, 681,
-    698, 715, 732, 750, 768, 787, 806, 825, 845,
-    866, 887, 909, 931, 953, 976
+    000, 100, 102, 105, 107, 110, 113, 115, 118, 121,
+    124, 127, 130, 133, 137, 140, 143, 147, 150, 154,
+    158, 162, 165, 169, 174, 178, 182, 187, 191, 196,
+    200, 205, 210, 215, 221, 226, 232, 237, 243, 249,
+    255, 261, 267, 274, 280, 287, 294, 301, 309, 316,
+    324, 332, 340, 348, 357, 365, 374, 383, 392, 402,
+    412, 422, 432, 442, 453, 464, 475, 487, 499, 511,
+    523, 536, 549, 562, 576, 590, 604, 619, 634, 649,
+    665, 681, 698, 715, 732, 750, 768, 787, 806, 825,
+    845, 866, 887, 909, 931, 953, 976
 };
 
 ResistanceInfo::ResistanceInfo (QObject *parent) : QObject (parent) {
@@ -141,22 +141,22 @@ QStringList ResistanceInfo::resistanceStripColors() const {
     QStringList list;
 
     // Add first two digits
-    list.append (digitColors().at ((int) digits().at (0)));
-    list.append (digitColors().at ((int) digits().at (1)));
+    list.append (digitColors().at (static_cast<int>(digits().at (0))));
+    list.append (digitColors().at (static_cast<int>(digits().at (1))));
 
     // Add third digit if resistance is 5-strip or 6-strip
     if (resistorType() != FourStripResistor)
-        list.append (digitColors().at ((int) digits().at (2)));
+        list.append (digitColors().at (static_cast<int>(digits().at (2))));
     else
         list.append ("transparent");
 
     // Add multiplier and tolerance strips
-    list.append (multiplierColors().at ((int) multiplier()));
-    list.append (toleranceColors().at ((int) tolerance()));
+    list.append (multiplierColors().at (static_cast<int>(multiplier())));
+    list.append (toleranceColors().at (static_cast<int>(tolerance())));
 
     // Add tempco strip
     if (resistorType() == SixStripResistor)
-        list.append (tempcoColors().at ((int) tempco()));
+        list.append (tempcoColors().at (static_cast<int>(tempco())));
     else
         list.append ("transparent");
 
@@ -397,7 +397,7 @@ int ResistanceInfo::getDigitValue (const Digit digit) {
                 __func__,
                 "Invalid argument");
 
-    return (int) digit;
+    return static_cast<int> (digit);
 }
 
 /**
@@ -988,7 +988,7 @@ QString ResistanceInfo::getResistanceStr (const double resistance) const {
                 "Invalid argument");
 
     // Resistance is unknown
-    if (resistance == UNKNOWN_RESISTANCE)
+    if (resistance < 0)
         return tr ("Unknown");
 
     // Resistance is 0 ohms
@@ -1001,7 +1001,7 @@ QString ResistanceInfo::getResistanceStr (const double resistance) const {
     // Get base number (e.g. 2.2 for 2.2 kΩ)
     QString number;
     double base = resistance / pow (10, power);
-    if (base == (int) base)
+    if (base == static_cast<int> (base))
         number = QString::number (int (base));
     else
         number = QString::number (base, 'f', 2);

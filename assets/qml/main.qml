@@ -79,23 +79,6 @@ ApplicationWindow {
     Material.theme: Material.Light
 
     //
-    // background color
-    //
-    background: Rectangle {
-        color: Material.primary
-    }
-
-    //
-    // White background color (only shown when UI is loaded)
-    //
-    Rectangle {
-        anchors.fill: parent
-        opacity: uiLoaded ? 1 : 0
-        color: Material.background
-        Behavior on opacity { NumberAnimation {} }
-    }
-
-    //
     // Main UI of the application
     //
     ColumnLayout {
