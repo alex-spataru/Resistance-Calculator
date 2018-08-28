@@ -168,13 +168,13 @@ Drawer {
                         Label {
                             color: "#fff"
                             text: iconTitle
+                            font.pixelSize: 14
                             font.weight: Font.Medium
-                            font.pixelSize: 16
                         }
 
                         Label {
                             color: "#fff"
-                            opacity: 0.87
+                            opacity: 0.80
                             text: iconSubtitle
                             font.pixelSize: 12
                         }

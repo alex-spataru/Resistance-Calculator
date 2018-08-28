@@ -26,7 +26,7 @@
 //
 // Application Information
 //
-static const char* APP_VERSION = "0.1 Alpha";
+static const char* APP_VERSION = "1.0 RC";
 static const char* APP_DEVELOPER = "Alex Spataru";
 static const char* APP_NAME = "Resistance Calculator";
 

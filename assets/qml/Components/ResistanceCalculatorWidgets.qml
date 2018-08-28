@@ -29,9 +29,9 @@ Item {
     id: widget
 
     // Custom Properties
-    property bool fourStrip: false
-    property bool fiveStrip: false
     property bool sixStrip: false
+    property bool fiveStrip: false
+    property bool fourStrip: false
 
     //
     // Main interface layout
@@ -56,6 +56,16 @@ Item {
             cableColor: "#a6a6a6"
             Layout.alignment: Qt.AlignHCenter
             width: Math.min (app.width / 2, 360)
+
+            numberOfStrips: {
+                if (sixStrip)
+                    return 6
+
+                else if (fiveStrip)
+                    return 5
+
+                return 4
+            }
         }
 
         //

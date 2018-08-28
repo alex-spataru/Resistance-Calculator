@@ -36,6 +36,7 @@ RowLayout {
     property int tolerance: 0
     property int multiplier: 0
     property int stripWidth: 4
+    property int numberOfStrips: 4
     property string bodyColor: "#000"
     property string cableColor: "#000"
 
@@ -84,6 +85,8 @@ RowLayout {
             width: resistor.stripWidth
             color: ResistanceInfo.resistanceStripColors [0]
 
+            Behavior on color { ColorAnimation {} }
+
             anchors {
                 top: parent.top
                 bottom: parent.bottom
@@ -111,24 +114,30 @@ RowLayout {
                 rightMargin: app.spacing
             }
 
-
-
             Rectangle {
                 height: parent.height
                 width: resistor.stripWidth
                 color: ResistanceInfo.resistanceStripColors [1]
+
+                Behavior on color { ColorAnimation {} }
             }
 
             Rectangle {
                 height: parent.height
                 width: resistor.stripWidth
+                opacity: numberOfStrips > 4 ? 1 : 0
                 color: ResistanceInfo.resistanceStripColors [2]
+
+                Behavior on color { ColorAnimation {} }
+                Behavior on opacity { NumberAnimation {} }
             }
 
             Rectangle {
                 height: parent.height
                 width: resistor.stripWidth
                 color: ResistanceInfo.resistanceStripColors [3]
+
+                Behavior on color { ColorAnimation {} }
             }
 
             Item {
@@ -138,9 +147,11 @@ RowLayout {
             Rectangle {
                 height: parent.height
                 width: resistor.stripWidth
-                color: ResistanceInfo.resistorType === RI.SixStripResistor ?
-                           ResistanceInfo.resistanceStripColors [4] :
-                           "transparent"
+                opacity: numberOfStrips >= 6 ? 1 : 0
+                color: ResistanceInfo.resistanceStripColors [4]
+
+                Behavior on color { ColorAnimation {} }
+                Behavior on opacity { NumberAnimation {} }
             }
         }
     }
@@ -161,6 +172,8 @@ RowLayout {
             color: ResistanceInfo.resistorType === RI.SixStripResistor ?
                        ResistanceInfo.resistanceStripColors [5] :
                        ResistanceInfo.resistanceStripColors [4]
+
+            Behavior on color { ColorAnimation {} }
 
             anchors {
                 top: parent.top
