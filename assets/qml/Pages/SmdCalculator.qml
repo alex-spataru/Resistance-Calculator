@@ -32,7 +32,7 @@ Item {
     //
     ColumnLayout {
         anchors.fill: parent
-        spacing: app.spacing * 4
+        spacing: app.spacing
 
         //
         // Spacer
@@ -47,13 +47,37 @@ Item {
         Label {
             font.italic: true
             Layout.fillWidth: true
-            font.pixelSize: app.mediumLabel
+            font.pixelSize: app.normalLabel
             Layout.alignment: Qt.AlignHCenter
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-            Layout.maximumWidth: Math.min (app.height, app.width) * 0.8
+
+            Layout.maximumWidth: {
+                if (app.width > app.height)
+                    app.width * 0.8
+                else
+                    app.width - 4 * app.spacing
+            }
 
             text: qsTr ("Type the marking on the SMD resistor...")
+        }
+
+        //
+        // Resistor value marker
+        //
+        Label {
+            Layout.fillWidth: true
+            font.pixelSize: app.largeLabel
+            Layout.alignment: Qt.AlignHCenter
+            horizontalAlignment: Label.AlignHCenter
+            text: qsTr ("Resistance") + ": " + ResistanceInfo.smdResistance
+        }
+
+        //
+        // Spacer
+        //
+        Item {
+            height: 2 * app.spacing
         }
 
         //
@@ -104,17 +128,6 @@ Item {
                 height: parent.height
                 width: parent.width / 6
             }
-        }
-
-        //
-        // Resistor value marker
-        //
-        Label {
-            Layout.fillWidth: true
-            font.pixelSize: app.largeLabel
-            Layout.alignment: Qt.AlignHCenter
-            horizontalAlignment: Label.AlignHCenter
-            text: qsTr ("Resistance") + ": " + ResistanceInfo.smdResistance
         }
 
         //

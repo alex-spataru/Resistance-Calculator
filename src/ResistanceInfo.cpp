@@ -766,7 +766,7 @@ void ResistanceInfo::calculateSmdResistance() {
             // Get two-digit code and calculate base value
             int value = 0;
             int digit = (numA * 10) + numB;
-            int maxEIA96Code = (sizeof (SMD_EIA96_VALUES) / sizeof (int)) - 1;
+            int maxEIA96Code = (sizeof (SMD_EIA96_VALUES) / sizeof (int));
             if (digit < maxEIA96Code)
                 value = SMD_EIA96_VALUES [digit];
             else {
