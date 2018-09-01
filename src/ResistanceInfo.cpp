@@ -25,7 +25,7 @@
 /**
  * Used when the user inputs an invalid SMD code.
  * This helps us to return "Unknown" resistance to the user instead
- * of showing 'Nan' or another cryptic message to the user
+ * of showing 'NaN' or another cryptic message to the user
  */
 static const double UNKNOWN_RESISTANCE = -1.0;
 
