@@ -71,12 +71,13 @@ int main (int argc, char** argv) {
     // Load QML interface
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty ("AppName", APP_NAME);
-    engine.rootContext()->setContextProperty ("AppVersion", APP_VERSION);
-    engine.rootContext()->setContextProperty ("AppDeveloper", APP_DEVELOPER);
-    engine.rootContext()->setContextProperty ("AdBannerId", ADS_BANNER_ID);
-    engine.rootContext()->setContextProperty ("AdsEnabled", ADS_ENABLED);
     engine.rootContext()->setContextProperty ("ResistanceInfo", &info);
     engine.rootContext()->setContextProperty ("DevicePixelRatio", dpr);
+    engine.rootContext()->setContextProperty ("AppVersion", APP_VERSION);
+    engine.rootContext()->setContextProperty ("AdsEnabled", ADS_ENABLED);
+    engine.rootContext()->setContextProperty ("AdBannerId", ADS_BANNER_ID);
+    engine.rootContext()->setContextProperty ("PackageName", PACKAGE_NAME);
+    engine.rootContext()->setContextProperty ("AppDeveloper", APP_DEVELOPER);
     engine.load (QUrl (QStringLiteral ("qrc:/qml/main.qml")));
 
     // Exit if QML loading fails

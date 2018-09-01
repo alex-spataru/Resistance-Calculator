@@ -79,6 +79,15 @@ ApplicationWindow {
     Material.theme: Material.Light
 
     //
+    // Font loader for roboto
+    //
+    font.family: loader.name
+    FontLoader {
+        id: loader
+        source: "qrc:/fonts/roboto/Roboto-Regular.ttf"
+    }
+
+    //
     // Main UI of the application
     //
     ColumnLayout {

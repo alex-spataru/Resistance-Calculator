@@ -75,7 +75,7 @@ ios {
 
 android {
     DEFINES += ENABLE_ADS
-    #DEFINES += MOBILE_RELEASE
+    DEFINES += MOBILE_RELEASE
     android:QT += androidextras gui-private
 
     DISTFILES += \
@@ -98,6 +98,7 @@ android {
 #-------------------------------------------------------------------------------
 
 RESOURCES += \
+    $$PWD/assets/fonts/fonts.qrc \
     $$PWD/assets/icons/icons.qrc \
     $$PWD/assets/images/images.qrc \
     $$PWD/assets/qml/qml.qrc

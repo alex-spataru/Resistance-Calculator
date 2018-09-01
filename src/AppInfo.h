@@ -24,9 +24,18 @@
 #define APP_INFO_H
 
 //
+// Set package/application name
+//
+#ifdef __ANDROID__
+    static const char* PACKAGE_NAME = "com.alexspataru.rescalc";
+#else
+    static const char* PACKAGE_NAME = "";
+#endif
+
+//
 // Application Information
 //
-static const char* APP_VERSION = "1.0 RC";
+static const char* APP_VERSION = "1.0";
 static const char* APP_DEVELOPER = "Alex Spataru";
 static const char* APP_NAME = "Resistance Calculator";
 
@@ -34,14 +43,14 @@ static const char* APP_NAME = "Resistance Calculator";
 // Ad Information
 //
 #if defined (ENABLE_ADS) && defined (MOBILE_RELEASE)
-static const bool ADS_ENABLED = true;
-static const char* ADS_BANNER_ID = "ca-app-pub-5828460259173662/1011183555";
+    static const bool ADS_ENABLED = true;
+    static const char* ADS_BANNER_ID = "ca-app-pub-5828460259173662/1011183555";
 #elif defined (ENABLE_ADS)
-static const bool ADS_ENABLED = true;
-static const char* ADS_BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
+    static const bool ADS_ENABLED = true;
+    static const char* ADS_BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
 #else
-static const bool ADS_ENABLED = false;
-static const char* ADS_BANNER_ID = "";
+    static const bool ADS_ENABLED = false;
+    static const char* ADS_BANNER_ID = "";
 #endif
 
 #endif

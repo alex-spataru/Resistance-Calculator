@@ -78,11 +78,14 @@ Page {
     // Opens the URL to report bugs
     //
     function reportBug() {
-
+        Qt.openUrlExternally ("https://github.com/alex-spataru/resistance-calculator/issues")
     }
 
+    //
+    // Access source code of the project
+    //
     function openGithubProject() {
-
+        Qt.openUrlExternally ("https://github.com/alex-spataru/resistance-calculator/")
     }
 
     //
@@ -91,31 +94,30 @@ Page {
     // currently running.
     //
     function removeAds() {
-
+        if (Qt.platform.os === "android" && AdsEnabled)
+            Qt.openUrlExternally ("market://details?id=" + PackageName + "Premium")
     }
 
     //
     // Opens the URL to request new features
     //
     function featureRequests() {
-
+        reportBug()
     }
 
     //
     // Opens the URL to rate the application
     //
     function rateApplication() {
-        if (Qt.platform.os === "android") {
-
-        }
+        if (Qt.platform.os === "android")
+            Qt.openUrlExternally ("market://details?id=" + PackageName)
 
         else if (Qt.platform.os == "ios") {
 
         }
 
-        else {
+        else
             Qt.openUrlExternally ("https://github.com/alex-spataru/resistor-calculator")
-        }
     }
 
     //
